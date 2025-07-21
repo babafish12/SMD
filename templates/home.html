@@ -1,12 +1,21 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- ... (head content remains the same) ... -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard - Material Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- ... (logo section remains the same) ... -->
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Material Dashboard</span>
+            </div>
+        </div>
 
         <nav class="nav-menu">
             <a href="{{ url_for('home') }}" class="nav-item active">
@@ -38,8 +47,6 @@
                 <span>Label_6</span>
             </a>
         </nav>
-
-        <!-- Remove the upgrade button -->
     </div>
 
     <!-- Main Content -->
@@ -50,7 +57,106 @@
                 <h1>Willkommen, {{ username }}!</h1>
                 <span class="breadcrumb">Home / Dashboard</span>
             </div>
-            <!-- ... (rest of the header remains the same) ... -->
+            <div class="header-right">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Suchen...">
+                </div>
+                <div class="notifications-container">
+                    <button class="header-btn notifications-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+
+                    <!-- Notifications Dropdown -->
+                    <div class="notifications-dropdown" id="notificationsDropdown">
+                        <div class="notifications-header">
+                            <h3><i class="fas fa-bell"></i> Benachrichtigungen</h3>
+                            <button class="mark-read-btn" onclick="markAllRead()">Alle lesen</button>
+                        </div>
+                        <div class="notifications-content">
+                            <div class="notification-item unread">
+                                <div class="notification-icon message">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Neue Nachricht von John Doe</span>
+                                        <span class="notification-time">vor 5 Min</span>
+                                    </div>
+                                    <div class="notification-text">Neue Projektanfrage eingegangen. Bitte prüfen Sie die Details.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-icon info">
+                                    <i class="fas fa-calendar"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Meeting verschoben</span>
+                                        <span class="notification-time">vor 1 Std</span>
+                                    </div>
+                                    <div class="notification-text">Das wöchentliche Meeting wurde auf morgen 14:00 verschoben.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item unread">
+                                <div class="notification-icon system">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">System Update</span>
+                                        <span class="notification-time">vor 2 Std</span>
+                                    </div>
+                                    <div class="notification-text">Sicherheitsupdate erfolgreich installiert. System läuft stabil.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-icon warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Budget Warnung</span>
+                                        <span class="notification-time">gestern</span>
+                                    </div>
+                                    <div class="notification-text">Monatsbudget zu 90% erreicht. Weitere Ausgaben prüfen.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-icon message">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Bericht verfügbar</span>
+                                        <span class="notification-time">gestern</span>
+                                    </div>
+                                    <div class="notification-text">Die Quartalsberichte sind fertig und warten auf Ihre Freigabe.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notifications-footer">
+                            <button class="view-all-btn">Alle Benachrichtigungen anzeigen</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-menu">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&faceindex=1" alt="User Avatar" class="user-avatar">
+                    <div class="user-info">
+                        <span class="username">{{ username }}</span>
+                        <span class="user-status">Online</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
         </header>
 
         <!-- Dashboard Content -->
@@ -58,24 +164,146 @@
             <!-- Stats Cards -->
             <div class="stats-grid">
                 <a href="{{ url_for('empty_page', page='todays_money') }}" class="stat-card pink">
-                    <!-- ... (content of the card remains the same) ... -->
+                    <div class="stat-icon">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>€53,000</h3>
+                        <p>Heutiges Geld</p>
+                        <span class="stat-trend positive">+55% als letzte Woche</span>
+                    </div>
                 </a>
 
                 <a href="{{ url_for('empty_page', page='todays_users') }}" class="stat-card green">
-                    <!-- ... (content of the card remains the same) ... -->
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>2,300</h3>
+                        <p>Heutige Nutzer</p>
+                        <span class="stat-trend positive">+3% als letzten Monat</span>
+                    </div>
                 </a>
 
                 <a href="{{ url_for('empty_page', page='new_clients') }}" class="stat-card blue">
-                    <!-- ... (content of the card remains the same) ... -->
+                    <div class="stat-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>+3,462</h3>
+                        <p>Neue Kunden</p>
+                        <span class="stat-trend negative">-2% als gestern</span>
+                    </div>
                 </a>
 
                 <a href="{{ url_for('empty_page', page='sales') }}" class="stat-card purple">
-                    <!-- ... (content of the card remains the same) ... -->
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>€103,430</h3>
+                        <p>Verkäufe</p>
+                        <span class="stat-trend positive">+5% als gestern</span>
+                    </div>
                 </a>
             </div>
 
-            <!-- ... (rest of the content remains the same) ... -->
+            <!-- Main Dashboard Window -->
+            <div class="dashboard-window">
+                <div class="window-header">
+                    <h2>Dashboard Übersicht</h2>
+                    <div class="window-controls">
+                        <button><i class="fas fa-minus"></i></button>
+                        <button><i class="fas fa-expand"></i></button>
+                        <button><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="placeholder-content">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Willkommen im Dashboard</h3>
+                        <p>Hier können Sie Ihre Geschäftsmetriken verwalten und überwachen. Wählen Sie eine der Optionen aus der Seitenleiste, um zu beginnen.</p>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-chart-bar"></i>
+                                <h4>Analytics</h4>
+                                <p>Detaillierte Berichte und Analytik für Ihr Unternehmen</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-users"></i>
+                                <h4>Benutzerverwaltung</h4>
+                                <p>Verwalten Sie Benutzer und deren Berechtigungen</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-cog"></i>
+                                <h4>Einstellungen</h4>
+                                <p>Konfigurieren Sie Ihre Dashboard-Einstellungen</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-bell"></i>
+                                <h4>Benachrichtigungen</h4>
+                                <p>Bleiben Sie über wichtige Updates informiert</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Nachrichten Modal entfernt -->
+
+    <script>
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function markAllRead() {
+            const unreadItems = document.querySelectorAll('.notification-item.unread');
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+            });
+
+            // Badge aktualisieren
+            const badge = document.querySelector('.badge');
+            badge.textContent = '0';
+            badge.style.display = 'none';
+        }
+
+        // Schließe Dropdown nur bei Escape-Taste
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const dropdown = document.getElementById('notificationsDropdown');
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Simuliere neue Benachrichtigung
+        function addNewNotification() {
+            const badge = document.querySelector('.badge');
+            let currentCount = parseInt(badge.textContent) || 0;
+            badge.textContent = currentCount + 1;
+            badge.style.display = 'flex';
+
+            // Animation für neue Benachrichtigung
+            badge.style.animation = 'pulse 0.5s ease-in-out';
+            setTimeout(() => {
+                badge.style.animation = '';
+            }, 500);
+        }
+
+        // Pulse Animation für Badge
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>

@@ -60,15 +60,98 @@
             <div class="header-right">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
+                    <input type="text" placeholder="Suchen...">
                 </div>
-                <button class="header-btn notifications-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
-                </button>
+                <div class="notifications-container">
+                    <button class="header-btn notifications-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+
+                    <!-- Notifications Dropdown -->
+                    <div class="notifications-dropdown" id="notificationsDropdown">
+                        <div class="notifications-header">
+                            <h3><i class="fas fa-bell"></i> Benachrichtigungen</h3>
+                            <button class="mark-read-btn" onclick="markAllRead()">Alle lesen</button>
+                        </div>
+                        <div class="notifications-content">
+                            <div class="notification-item unread">
+                                <div class="notification-icon message">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Neue Nachricht von John Doe</span>
+                                        <span class="notification-time">vor 5 Min</span>
+                                    </div>
+                                    <div class="notification-text">Neue Projektanfrage eingegangen. Bitte prüfen Sie die Details.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-icon info">
+                                    <i class="fas fa-calendar"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Meeting verschoben</span>
+                                        <span class="notification-time">vor 1 Std</span>
+                                    </div>
+                                    <div class="notification-text">Das wöchentliche Meeting wurde auf morgen 14:00 verschoben.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item unread">
+                                <div class="notification-icon system">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">System Update</span>
+                                        <span class="notification-time">vor 2 Std</span>
+                                    </div>
+                                    <div class="notification-text">Sicherheitsupdate erfolgreich installiert. System läuft stabil.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-icon warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Budget Warnung</span>
+                                        <span class="notification-time">gestern</span>
+                                    </div>
+                                    <div class="notification-text">Monatsbudget zu 90% erreicht. Weitere Ausgaben prüfen.</div>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-icon message">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-header">
+                                        <span class="notification-title">Bericht verfügbar</span>
+                                        <span class="notification-time">gestern</span>
+                                    </div>
+                                    <div class="notification-text">Die Quartalsberichte sind fertig und warten auf Ihre Freigabe.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notifications-footer">
+                            <button class="view-all-btn">Alle Benachrichtigungen anzeigen</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="user-menu">
-                    <img src="{{ url_for('static', filename='avatar.png') }}" alt="User Avatar" class="user-avatar">
-                    <span>{{ username }}</span>
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&faceindex=1" alt="User Avatar" class="user-avatar">
+                    <div class="user-info">
+                        <span class="username">{{ username }}</span>
+                        <span class="user-status">Online</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
                 <a href="{{ url_for('logout') }}" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
@@ -91,11 +174,191 @@
                     <div class="placeholder-content">
                         <i class="fas fa-file-alt"></i>
                         <h3>{{ page }}</h3>
-                        <p>This is an empty page for {{ page }}. Add your content here.</p>
+                        <p>Dies ist eine leere Seite für {{ page }}. Fügen Sie hier Ihren Inhalt hinzu.</p>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-plus-circle"></i>
+                                <h4>Neuen Inhalt hinzufügen</h4>
+                                <p>Beginnen Sie mit dem Aufbau Ihrer {{ page }} Seite</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-edit"></i>
+                                <h4>Bearbeiten</h4>
+                                <p>Passen Sie den Inhalt nach Ihren Wünschen an</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-save"></i>
+                                <h4>Speichern</h4>
+                                <p>Speichern Sie Ihre Änderungen automatisch</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-share"></i>
+                                <h4>Teilen</h4>
+                                <p>Teilen Sie Ihre Inhalte mit anderen</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Nachrichten Modal -->
+    <div class="messages-modal" id="messagesModal">
+        <div class="messages-container">
+            <div class="messages-header">
+                <h3><i class="fas fa-envelope"></i> Nachrichten Hub</h3>
+                <button class="close-btn" onclick="toggleMessages()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="messages-content">
+                <div class="message-item">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender message-unread">John Doe</span>
+                            <span class="message-time">vor 5 Min</span>
+                        </div>
+                        <div class="message-text">Neue Projektanfrage eingegangen. Bitte prüfen Sie die Details.</div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-avatar">MS</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">Maria Schmidt</span>
+                            <span class="message-time">vor 1 Std</span>
+                        </div>
+                        <div class="message-text">Das wöchentliche Meeting wurde auf morgen 14:00 verschoben.</div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-avatar">SY</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender message-unread">System</span>
+                            <span class="message-time">vor 2 Std</span>
+                        </div>
+                        <div class="message-text">Sicherheitsupdate erfolgreich installiert. System läuft stabil.</div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-avatar">TK</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">Thomas Klein</span>
+                            <span class="message-time">gestern</span>
+                        </div>
+                        <div class="message-text">Können wir uns morgen wegen des neuen Budgetplans besprechen?</div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-avatar">LM</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">Lisa Müller</span>
+                            <span class="message-time">gestern</span>
+                        </div>
+                        <div class="message-text">Die Quartalsberichte sind fertig und warten auf Ihre Freigabe.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function markAllRead() {
+            const unreadItems = document.querySelectorAll('.notification-item.unread');
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+            });
+
+            // Badge aktualisieren
+            const badge = document.querySelector('.badge');
+            badge.textContent = '0';
+            badge.style.display = 'none';
+        }
+
+        // Schließe Dropdown bei Klick außerhalb
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notificationsDropdown');
+            const button = document.querySelector('.notifications-btn');
+
+            if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        // Schließe Modal bei Klick außerhalb entfernt
+
+        // Escape-Taste zum Schließen
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('messagesModal');
+                if (modal.classList.contains('show')) {
+                    toggleMessages();
+                }
+            }
+        });
+
+        // Simuliere neue Nachrichten (optional)
+        function simulateNewMessage() {
+            const badge = document.querySelector('.badge');
+            let currentCount = parseInt(badge.textContent);
+            badge.textContent = currentCount + 1;
+
+            // Animation für neue Nachricht
+            badge.style.animation = 'pulse 0.5s ease-in-out';
+            setTimeout(() => {
+                badge.style.animation = '';
+            }, 500);
+        }
+
+        // Pulse Animation für Badge
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+        });
+
+        // Simuliere neue Nachrichten (optional)
+        function simulateNewMessage() {
+            const badge = document.querySelector('.badge');
+            let currentCount = parseInt(badge.textContent);
+            badge.textContent = currentCount + 1;
+
+            // Animation für neue Nachricht
+            badge.style.animation = 'pulse 0.5s ease-in-out';
+            setTimeout(() => {
+                badge.style.animation = '';
+            }, 500);
+        }
+
+        // Pulse Animation für Badge
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
