@@ -257,7 +257,20 @@
     <script>
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationsDropdown');
-            dropdown.classList.toggle('show');
+            console.log('Button clicked!'); // Debug
+            console.log('Dropdown found:', dropdown); // Debug
+
+            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                dropdown.style.display = 'block';
+                setTimeout(() => {
+                    dropdown.classList.add('show');
+                }, 10);
+            } else {
+                dropdown.classList.remove('show');
+                setTimeout(() => {
+                    dropdown.style.display = 'none';
+                }, 300);
+            }
         }
 
         function markAllRead() {
