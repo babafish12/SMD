@@ -3,14 +3,175 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Dashboard - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="theme">
-<div class="container fade-in">
-    <h2>Welcome, {{ username }}!</h2>
-    <p>This is the homepage.</p>
-    <a href="{{ url_for('logout') }}">Logout</a>
-</div>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Material Dashboard</span>
+            </div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-table"></i>
+                <span>Label_1</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Label_2</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Label_3</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Label_4</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Label_5</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Label_6</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="upgrade-btn">
+                <i class="fas fa-star"></i>
+                <span>Upgrade to Pro</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Dashboard</h1>
+                <span class="breadcrumb">Home / Dashboard</span>
+            </div>
+            <div class="header-right">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Type here...">
+                </div>
+                <button class="header-btn settings-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="header-btn notifications-btn" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <div class="user-menu">
+                    <img src="https://via.placeholder.com/40x40/667eea/ffffff?text=U" alt="User" class="user-avatar">
+                    <span>Welcome, {{ username }}!</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="content-area">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card pink">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>350k</h3>
+                        <p>Today's Money</p>
+                        <span class="stat-trend positive">+55% than last week</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card green">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>2,300</h3>
+                        <p>Today's Users</p>
+                        <span class="stat-trend positive">+3% than last month</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card blue">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>3,462</h3>
+                        <p>New Clients</p>
+                        <span class="stat-trend negative">-2% than yesterday</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card purple">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>$103,430</h3>
+                        <p>Sales</p>
+                        <span class="stat-trend positive">+5% than yesterday</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Window -->
+            <div class="dashboard-window">
+                <div class="window-header">
+                    <h2>Main Application Area</h2>
+                    <div class="window-controls">
+                        <button><i class="fas fa-minus"></i></button>
+                        <button><i class="fas fa-expand"></i></button>
+                        <button><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="placeholder-content">
+                        <i class="fas fa-desktop"></i>
+                        <h3>Application Window</h3>
+                        <p>This is where your main application content will be displayed. You can replace this section with any component or application you need.</p>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-chart-pie"></i>
+                                <h4>Analytics</h4>
+                                <p>View detailed analytics and reports</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-database"></i>
+                                <h4>Data Management</h4>
+                                <p>Manage your data efficiently</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-tools"></i>
+                                <h4>Tools & Utilities</h4>
+                                <p>Access powerful tools and utilities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
