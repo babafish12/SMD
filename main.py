@@ -7,7 +7,6 @@ app.secret_key = os.environ.get("SECRET_KEY", "changeme")
 
 USER_FILE = "users.json"
 
-
 def load_user():
     try:
         with open(USER_FILE) as f:
@@ -15,13 +14,11 @@ def load_user():
     except FileNotFoundError:
         return {"username": "admin", "password": "password"}
 
-
 @app.route("/")
 def index():
-    if "username" in session:
-        return redirect(url_for("home"))
-    return redirect(url_for("login"))
-
+    if "username" not in session:
+        return redirect(url_for("login"))
+    return redirect(url_for("home"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -36,19 +33,23 @@ def login():
             return render_template("login.html", error="Invalid credentials")
     return render_template("login.html")
 
-
 @app.route("/home")
 def home():
     if "username" not in session:
         return redirect(url_for("login"))
     return render_template("home.html", username=session["username"])
 
-
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
+# Neue Route für die leere Seite
+@app.route('/empty/<page>')
+def empty_page(page):
+    if "username" not in session:
+        return redirect(url_for("login"))
+    return render_template('empty.html', page=page, username=session["username"])
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)

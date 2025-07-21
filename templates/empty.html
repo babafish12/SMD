@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page }} - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Material Dashboard</span>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="{{ url_for('home') }}" class="nav-item {% if page == 'Dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('empty_page', page='label_1') }}" class="nav-item {% if page == 'label_1' %}active{% endif %}">
+                <i class="fas fa-table"></i>
+                <span>Label_1</span>
+            </a>
+            <a href="{{ url_for('empty_page', page='label_2') }}" class="nav-item {% if page == 'label_2' %}active{% endif %}">
+                <i class="fas fa-chart-bar"></i>
+                <span>Label_2</span>
+            </a>
+            <a href="{{ url_for('empty_page', page='label_3') }}" class="nav-item {% if page == 'label_3' %}active{% endif %}">
+                <i class="fas fa-users"></i>
+                <span>Label_3</span>
+            </a>
+            <a href="{{ url_for('empty_page', page='label_4') }}" class="nav-item {% if page == 'label_4' %}active{% endif %}">
+                <i class="fas fa-cog"></i>
+                <span>Label_4</span>
+            </a>
+            <a href="{{ url_for('empty_page', page='label_5') }}" class="nav-item {% if page == 'label_5' %}active{% endif %}">
+                <i class="fas fa-bell"></i>
+                <span>Label_5</span>
+            </a>
+            <a href="{{ url_for('empty_page', page='label_6') }}" class="nav-item {% if page == 'label_6' %}active{% endif %}">
+                <i class="fas fa-user"></i>
+                <span>Label_6</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>{{ page }}</h1>
+                <span class="breadcrumb">Home / {{ page }}</span>
+            </div>
+            <div class="header-right">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <button class="header-btn notifications-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <div class="user-menu">
+                    <img src="{{ url_for('static', filename='avatar.png') }}" alt="User Avatar" class="user-avatar">
+                    <span>{{ username }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="content-area">
+            <div class="dashboard-window">
+                <div class="window-header">
+                    <h2>{{ page }} Content</h2>
+                    <div class="window-controls">
+                        <button><i class="fas fa-minus"></i></button>
+                        <button><i class="fas fa-expand"></i></button>
+                        <button><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="placeholder-content">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>{{ page }}</h3>
+                        <p>This is an empty page for {{ page }}. Add your content here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
