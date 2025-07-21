@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard - Material Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <title>To-Do Liste - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='todo.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -18,11 +18,11 @@
         </div>
 
         <nav class="nav-menu">
-            <a href="{{ url_for('home') }}" class="nav-item active">
+            <a href="{{ url_for('home') }}" class="nav-item">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{{ url_for('todo_page') }}" class="nav-item">
+            <a href="{{ url_for('todo_page') }}" class="nav-item active">
                 <i class="fas fa-tasks"></i>
                 <span>To-Do Liste</span>
             </a>
@@ -54,8 +54,8 @@
         <!-- Header -->
         <header class="header">
             <div class="header-left">
-                <h1>Willkommen, {{ username }}!</h1>
-                <span class="breadcrumb">Home / Dashboard</span>
+                <h1>To-Do Liste</h1>
+                <span class="breadcrumb">Home / To-Do Liste</span>
             </div>
             <div class="header-right">
                 <div class="search-bar">
@@ -113,32 +113,6 @@
                                     <div class="notification-text">Sicherheitsupdate erfolgreich installiert. System läuft stabil.</div>
                                 </div>
                             </div>
-
-                            <div class="notification-item">
-                                <div class="notification-icon warning">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-header">
-                                        <span class="notification-title">Budget Warnung</span>
-                                        <span class="notification-time">gestern</span>
-                                    </div>
-                                    <div class="notification-text">Monatsbudget zu 90% erreicht. Weitere Ausgaben prüfen.</div>
-                                </div>
-                            </div>
-
-                            <div class="notification-item">
-                                <div class="notification-icon message">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-header">
-                                        <span class="notification-title">Bericht verfügbar</span>
-                                        <span class="notification-time">gestern</span>
-                                    </div>
-                                    <div class="notification-text">Die Quartalsberichte sind fertig und warten auf Ihre Freigabe.</div>
-                                </div>
-                            </div>
                         </div>
                         <div class="notifications-footer">
                             <button class="view-all-btn">Alle Benachrichtigungen anzeigen</button>
@@ -159,59 +133,11 @@
             </div>
         </header>
 
-        <!-- Dashboard Content -->
+        <!-- To-Do Content -->
         <div class="content-area">
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <a href="{{ url_for('empty_page', page='todays_money') }}" class="stat-card pink">
-                    <div class="stat-icon">
-                        <i class="fas fa-euro-sign"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>€53,000</h3>
-                        <p>Heutiges Geld</p>
-                        <span class="stat-trend positive">+55% als letzte Woche</span>
-                    </div>
-                </a>
-
-                <a href="{{ url_for('empty_page', page='todays_users') }}" class="stat-card green">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>2,300</h3>
-                        <p>Heutige Nutzer</p>
-                        <span class="stat-trend positive">+3% als letzten Monat</span>
-                    </div>
-                </a>
-
-                <a href="{{ url_for('empty_page', page='new_clients') }}" class="stat-card blue">
-                    <div class="stat-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>+3,462</h3>
-                        <p>Neue Kunden</p>
-                        <span class="stat-trend negative">-2% als gestern</span>
-                    </div>
-                </a>
-
-                <a href="{{ url_for('empty_page', page='sales') }}" class="stat-card purple">
-                    <div class="stat-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>€103,430</h3>
-                        <p>Verkäufe</p>
-                        <span class="stat-trend positive">+5% als gestern</span>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Main Dashboard Window -->
             <div class="dashboard-window">
                 <div class="window-header">
-                    <h2>Dashboard Übersicht</h2>
+                    <h2><i class="fas fa-tasks"></i> To-Do Liste Verwaltung</h2>
                     <div class="window-controls">
                         <button><i class="fas fa-minus"></i></button>
                         <button><i class="fas fa-expand"></i></button>
@@ -219,31 +145,40 @@
                     </div>
                 </div>
                 <div class="window-content">
-                    <div class="placeholder-content">
-                        <i class="fas fa-chart-pie"></i>
-                        <h3>Willkommen im Dashboard</h3>
-                        <p>Hier können Sie Ihre Geschäftsmetriken verwalten und überwachen. Wählen Sie eine der Optionen aus der Seitenleiste, um zu beginnen.</p>
+                    <!-- To-Do Liste Content -->
+                    <div class="todo-container">
+                        <!-- Eingabebereich -->
+                        <div class="todo-input-section">
+                            <div class="todo-input-group">
+                                <input type="text" id="todoInput" placeholder="Neue Aufgabe eingeben..." class="todo-input">
+                                <button onclick="addTodo()" class="todo-add-btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
 
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <i class="fas fa-chart-bar"></i>
-                                <h4>Analytics</h4>
-                                <p>Detaillierte Berichte und Analytik für Ihr Unternehmen</p>
+                        <!-- Aufgaben Anzeige -->
+                        <div class="todo-lists">
+                            <!-- Offene Aufgaben -->
+                            <div class="todo-section">
+                                <h3 class="todo-section-title">
+                                    <i class="fas fa-tasks"></i>
+                                    Offene Aufgaben (<span id="openCount">0</span>)
+                                </h3>
+                                <div id="openTodos" class="todo-list">
+                                    <!-- Dynamisch gefüllt -->
+                                </div>
                             </div>
-                            <div class="feature-item">
-                                <i class="fas fa-users"></i>
-                                <h4>Benutzerverwaltung</h4>
-                                <p>Verwalten Sie Benutzer und deren Berechtigungen</p>
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-cog"></i>
-                                <h4>Einstellungen</h4>
-                                <p>Konfigurieren Sie Ihre Dashboard-Einstellungen</p>
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-bell"></i>
-                                <h4>Benachrichtigungen</h4>
-                                <p>Bleiben Sie über wichtige Updates informiert</p>
+
+                            <!-- Erledigte Aufgaben -->
+                            <div class="todo-section">
+                                <h3 class="todo-section-title completed-section" onclick="toggleCompleted()">
+                                    <i class="fas fa-chevron-down" id="completedToggle"></i>
+                                    Erledigte Aufgaben (<span id="completedCount">0</span>)
+                                </h3>
+                                <div id="completedTodos" class="todo-list completed-list">
+                                    <!-- Dynamisch gefüllt -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -252,13 +187,11 @@
         </div>
     </div>
 
-    <!-- Nachrichten Modal entfernt -->
-
     <script>
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationsDropdown');
-            console.log('Button clicked!'); // Debug
-            console.log('Dropdown found:', dropdown); // Debug
+            console.log('Button clicked!');
+            console.log('Dropdown found:', dropdown);
 
             if (dropdown.style.display === 'none' || dropdown.style.display === '') {
                 dropdown.style.display = 'block';
@@ -279,13 +212,11 @@
                 item.classList.remove('unread');
             });
 
-            // Badge aktualisieren
             const badge = document.querySelector('.badge');
             badge.textContent = '0';
             badge.style.display = 'none';
         }
 
-        // Schließe Dropdown nur bei Escape-Taste
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const dropdown = document.getElementById('notificationsDropdown');
@@ -293,21 +224,155 @@
             }
         });
 
-        // Simuliere neue Benachrichtigung
         function addNewNotification() {
             const badge = document.querySelector('.badge');
             let currentCount = parseInt(badge.textContent) || 0;
             badge.textContent = currentCount + 1;
             badge.style.display = 'flex';
 
-            // Animation für neue Benachrichtigung
             badge.style.animation = 'pulse 0.5s ease-in-out';
             setTimeout(() => {
                 badge.style.animation = '';
             }, 500);
         }
 
-        // Pulse Animation für Badge
+        // ===== TO-DO LIST FUNCTIONALITY =====
+        let todos = [];
+        let isCompletedCollapsed = false;
+
+        // Lade To-Dos beim Seitenstart
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTodos();
+            setupTodoEventListeners();
+        });
+
+        function setupTodoEventListeners() {
+            // Enter-Taste im Input
+            const todoInput = document.getElementById('todoInput');
+            if (todoInput) {
+                todoInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addTodo();
+                    }
+                });
+            }
+        }
+
+        async function loadTodos() {
+            try {
+                const response = await fetch('/api/todos');
+                if (response.ok) {
+                    todos = await response.json();
+                } else {
+                    todos = [];
+                }
+                renderTodos();
+            } catch (error) {
+                console.log('Fehler beim Laden der To-Dos:', error);
+                todos = [];
+                renderTodos();
+            }
+        }
+
+        async function saveTodos() {
+            try {
+                await fetch('/api/todos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(todos)
+                });
+            } catch (error) {
+                console.log('Fehler beim Speichern der To-Dos:', error);
+            }
+        }
+
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const text = input.value.trim();
+
+            if (text === '') return;
+
+            const newTodo = {
+                id: Date.now(),
+                text: text,
+                completed: false,
+                createdAt: new Date().toISOString(),
+                completedAt: null
+            };
+
+            todos.unshift(newTodo); // Neue Tasks oben
+            input.value = '';
+            renderTodos();
+            saveTodos();
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                todo.completedAt = todo.completed ? new Date().toISOString() : null;
+                renderTodos();
+                saveTodos();
+            }
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            renderTodos();
+            saveTodos();
+        }
+
+        function toggleCompleted() {
+            isCompletedCollapsed = !isCompletedCollapsed;
+            const completedList = document.getElementById('completedTodos');
+            const toggleIcon = document.getElementById('completedToggle');
+
+            if (isCompletedCollapsed) {
+                completedList.style.display = 'none';
+                toggleIcon.className = 'fas fa-chevron-right';
+            } else {
+                completedList.style.display = 'block';
+                toggleIcon.className = 'fas fa-chevron-down';
+            }
+        }
+
+        function renderTodos() {
+            const openTodos = todos.filter(t => !t.completed).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            const completedTodos = todos.filter(t => t.completed).sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+
+            // Zähler aktualisieren
+            document.getElementById('openCount').textContent = openTodos.length;
+            document.getElementById('completedCount').textContent = completedTodos.length;
+
+            // Offene To-Dos rendern
+            const openContainer = document.getElementById('openTodos');
+            openContainer.innerHTML = openTodos.map(todo => createTodoHTML(todo)).join('');
+
+            // Erledigte To-Dos rendern
+            const completedContainer = document.getElementById('completedTodos');
+            completedContainer.innerHTML = completedTodos.map(todo => createTodoHTML(todo)).join('');
+        }
+
+        function createTodoHTML(todo) {
+            const createdDate = new Date(todo.createdAt).toLocaleString('de-DE');
+            const completedDate = todo.completedAt ? new Date(todo.completedAt).toLocaleString('de-DE') : '';
+
+            return `
+                <div class="todo-item ${todo.completed ? 'completed' : ''}" title="Erstellt: ${createdDate}${todo.completedAt ? ', Erledigt: ' + completedDate : ''}">
+                    <button class="todo-check-btn ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${todo.id})">
+                        <i class="fas ${todo.completed ? 'fa-check' : 'fa-circle'}"></i>
+                    </button>
+                    <span class="todo-text">${todo.text}</span>
+                    <button class="todo-delete-btn" onclick="deleteTodo(${todo.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        // Pulse Animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes pulse {
