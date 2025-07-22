@@ -110,5 +110,47 @@ def save_todos_api():
         return jsonify({"error": str(e)}), 400
 
 
+# ===== NOTIFICATION API ROUTES =====
+@app.route('/api/notifications', methods=['GET'])
+def get_notifications():
+    if "username" not in session:
+        return jsonify({"error": "Nicht angemeldet"}), 401
+
+    todos = load_todos()
+    # Nur offene Aufgaben als Benachrichtigungen
+    open_todos = [todo for todo in todos if not todo.get('completed', False)]
+
+    # Beschränke auf die neuesten 10 Aufgaben
+    notifications = open_todos[:10]
+
+    return jsonify({
+        "notifications": notifications,
+        "total_count": len(open_todos)
+    })
+
+
+@app.route('/api/todos/<int:todo_id>/complete', methods=['POST'])
+def complete_todo(todo_id):
+    if "username" not in session:
+        return jsonify({"error": "Nicht angemeldet"}), 401
+
+    try:
+        todos = load_todos()
+
+        # Finde die Aufgabe und markiere sie als erledigt
+        for todo in todos:
+            if todo.get('id') == todo_id:
+                todo['completed'] = True
+                todo['completedAt'] = request.json.get('completedAt')
+                break
+
+        if save_todos(todos):
+            return jsonify({"success": True})
+        else:
+            return jsonify({"error": "Speichern fehlgeschlagen"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)

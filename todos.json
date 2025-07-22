@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": 1753223052556,
+    "text": "bist du dumm",
+    "completed": true,
+    "createdAt": "2025-07-22T22:24:12.556Z",
+    "completedAt": "2025-07-22T22:24:16.815Z"
+  },
+  {
+    "id": 1753223049277,
+    "text": "hallo",
+    "completed": true,
+    "createdAt": "2025-07-22T22:24:09.277Z",
+    "completedAt": "2025-07-22T22:24:18.156Z"
+  }
+]

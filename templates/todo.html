@@ -65,57 +65,22 @@
                 <div class="notifications-container">
                     <button class="header-btn notifications-btn" onclick="toggleNotifications()">
                         <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
+                        <span class="badge" id="notificationBadge" style="display: none;">0</span>
                     </button>
 
                     <!-- Notifications Dropdown -->
                     <div class="notifications-dropdown" id="notificationsDropdown">
                         <div class="notifications-header">
-                            <h3><i class="fas fa-bell"></i> Benachrichtigungen</h3>
-                            <button class="mark-read-btn" onclick="markAllRead()">Alle lesen</button>
+                            <h3><i class="fas fa-tasks"></i> Offene Aufgaben</h3>
+                            <button class="mark-read-btn" onclick="markAllCompleted()">Alle erledigen</button>
                         </div>
-                        <div class="notifications-content">
-                            <div class="notification-item unread">
-                                <div class="notification-icon message">
-                                    <i class="fas fa-envelope"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-header">
-                                        <span class="notification-title">Neue Nachricht von John Doe</span>
-                                        <span class="notification-time">vor 5 Min</span>
-                                    </div>
-                                    <div class="notification-text">Neue Projektanfrage eingegangen. Bitte prüfen Sie die Details.</div>
-                                </div>
-                            </div>
-
-                            <div class="notification-item">
-                                <div class="notification-icon info">
-                                    <i class="fas fa-calendar"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-header">
-                                        <span class="notification-title">Meeting verschoben</span>
-                                        <span class="notification-time">vor 1 Std</span>
-                                    </div>
-                                    <div class="notification-text">Das wöchentliche Meeting wurde auf morgen 14:00 verschoben.</div>
-                                </div>
-                            </div>
-
-                            <div class="notification-item unread">
-                                <div class="notification-icon system">
-                                    <i class="fas fa-cogs"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-header">
-                                        <span class="notification-title">System Update</span>
-                                        <span class="notification-time">vor 2 Std</span>
-                                    </div>
-                                    <div class="notification-text">Sicherheitsupdate erfolgreich installiert. System läuft stabil.</div>
-                                </div>
-                            </div>
+                        <div class="notifications-content" id="notificationsContent">
+                            <!-- Dynamisch gefüllt mit To-Do Aufgaben -->
                         </div>
                         <div class="notifications-footer">
-                            <button class="view-all-btn">Alle Benachrichtigungen anzeigen</button>
+                            <button class="view-all-btn" onclick="scrollToTodoList()">
+                                Zu den Aufgaben scrollen
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -146,7 +111,7 @@
                 </div>
                 <div class="window-content">
                     <!-- To-Do Liste Content -->
-                    <div class="todo-container">
+                    <div class="todo-container" id="todoContainer">
                         <!-- Eingabebereich -->
                         <div class="todo-input-section">
                             <div class="todo-input-group">
@@ -188,10 +153,172 @@
     </div>
 
     <script>
+        // ===== NOTIFICATION SYSTEM =====
+        let notificationsLoaded = false;
+
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/api/notifications');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateNotifications(data.notifications, data.total_count);
+                } else {
+                    updateNotifications([], 0);
+                }
+            } catch (error) {
+                console.log('Fehler beim Laden der Benachrichtigungen:', error);
+                updateNotifications([], 0);
+            }
+        }
+
+        function updateNotifications(notifications, totalCount) {
+            const badge = document.getElementById('notificationBadge');
+            const content = document.getElementById('notificationsContent');
+
+            // Badge aktualisieren
+            if (totalCount > 0) {
+                badge.textContent = totalCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            // Inhalt aktualisieren
+            if (notifications.length === 0) {
+                content.innerHTML = `
+                    <div class="no-notifications">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Alle Aufgaben erledigt!</h4>
+                        <p>Sie haben keine offenen To-Do Aufgaben.</p>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = notifications.map(todo => createNotificationHTML(todo)).join('');
+            }
+        }
+
+        function createNotificationHTML(todo) {
+            const createdDate = new Date(todo.createdAt).toLocaleString('de-DE', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Zeitdifferenz berechnen
+            const now = new Date();
+            const created = new Date(todo.createdAt);
+            const diffMinutes = Math.floor((now - created) / (1000 * 60));
+
+            let timeAgo;
+            if (diffMinutes < 1) {
+                timeAgo = 'gerade eben';
+            } else if (diffMinutes < 60) {
+                timeAgo = `vor ${diffMinutes} Min`;
+            } else if (diffMinutes < 1440) {
+                const hours = Math.floor(diffMinutes / 60);
+                timeAgo = `vor ${hours} Std`;
+            } else {
+                const days = Math.floor(diffMinutes / 1440);
+                timeAgo = `vor ${days} Tag${days > 1 ? 'en' : ''}`;
+            }
+
+            return `
+                <div class="notification-item todo-notification" data-todo-id="${todo.id}">
+                    <div class="notification-icon message">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <span class="notification-title">${todo.text}</span>
+                            <span class="notification-time">${timeAgo}</span>
+                        </div>
+                        <div class="notification-text">Erstellt am ${createdDate}</div>
+                        <div class="notification-actions" style="margin-top: 8px;">
+                            <button class="complete-todo-btn" onclick="completeTodoFromNotification(${todo.id}, this)"
+                                    style="background: linear-gradient(135deg, #43e97b, #38f9d7);
+                                           border: none;
+                                           color: white;
+                                           padding: 4px 8px;
+                                           border-radius: 6px;
+                                           font-size: 11px;
+                                           cursor: pointer;
+                                           transition: all 0.3s ease;">
+                                <i class="fas fa-check"></i> Erledigen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function completeTodoFromNotification(todoId, button) {
+            try {
+                // Animation starten
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Erledige...';
+                button.disabled = true;
+
+                const response = await fetch(`/api/todos/${todoId}/complete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        completedAt: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok) {
+                    // Benachrichtigung animiert entfernen
+                    const notificationItem = button.closest('.notification-item');
+                    notificationItem.style.transform = 'translateX(100%)';
+                    notificationItem.style.opacity = '0';
+
+                    setTimeout(() => {
+                        notificationItem.remove();
+                        // Sowohl Benachrichtigungen als auch Todo-Liste neu laden
+                        loadNotifications();
+                        loadTodos();
+                    }, 300);
+                } else {
+                    button.innerHTML = '<i class="fas fa-exclamation"></i> Fehler';
+                    setTimeout(() => {
+                        button.innerHTML = '<i class="fas fa-check"></i> Erledigen';
+                        button.disabled = false;
+                    }, 2000);
+                }
+            } catch (error) {
+                console.log('Fehler beim Erledigen der Aufgabe:', error);
+                button.innerHTML = '<i class="fas fa-exclamation"></i> Fehler';
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-check"></i> Erledigen';
+                    button.disabled = false;
+                }, 2000);
+            }
+        }
+
+        async function markAllCompleted() {
+            const todoNotifications = document.querySelectorAll('.todo-notification');
+
+            for (const notification of todoNotifications) {
+                const todoId = notification.dataset.todoId;
+                const button = notification.querySelector('.complete-todo-btn');
+
+                if (button && !button.disabled) {
+                    await completeTodoFromNotification(parseInt(todoId), button);
+                    // Kleine Verzögerung zwischen den Aufgaben
+                    await new Promise(resolve => setTimeout(resolve, 150));
+                }
+            }
+        }
+
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationsDropdown');
-            console.log('Button clicked!');
-            console.log('Dropdown found:', dropdown);
+
+            if (!notificationsLoaded) {
+                loadNotifications();
+                notificationsLoaded = true;
+            }
 
             if (dropdown.style.display === 'none' || dropdown.style.display === '') {
                 dropdown.style.display = 'block';
@@ -206,34 +333,16 @@
             }
         }
 
-        function markAllRead() {
-            const unreadItems = document.querySelectorAll('.notification-item.unread');
-            unreadItems.forEach(item => {
-                item.classList.remove('unread');
-            });
+        function scrollToTodoList() {
+            const todoContainer = document.getElementById('todoContainer');
+            todoContainer.scrollIntoView({ behavior: 'smooth' });
 
-            const badge = document.querySelector('.badge');
-            badge.textContent = '0';
-            badge.style.display = 'none';
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const dropdown = document.getElementById('notificationsDropdown');
-                dropdown.classList.remove('show');
-            }
-        });
-
-        function addNewNotification() {
-            const badge = document.querySelector('.badge');
-            let currentCount = parseInt(badge.textContent) || 0;
-            badge.textContent = currentCount + 1;
-            badge.style.display = 'flex';
-
-            badge.style.animation = 'pulse 0.5s ease-in-out';
+            // Dropdown schließen
+            const dropdown = document.getElementById('notificationsDropdown');
+            dropdown.classList.remove('show');
             setTimeout(() => {
-                badge.style.animation = '';
-            }, 500);
+                dropdown.style.display = 'none';
+            }, 300);
         }
 
         // ===== TO-DO LIST FUNCTIONALITY =====
@@ -243,6 +352,8 @@
         // Lade To-Dos beim Seitenstart
         document.addEventListener('DOMContentLoaded', function() {
             loadTodos();
+            loadNotifications();
+            notificationsLoaded = true;
             setupTodoEventListeners();
         });
 
@@ -267,6 +378,10 @@
                     todos = [];
                 }
                 renderTodos();
+                // Benachrichtigungen auch aktualisieren
+                if (notificationsLoaded) {
+                    loadNotifications();
+                }
             } catch (error) {
                 console.log('Fehler beim Laden der To-Dos:', error);
                 todos = [];
@@ -283,6 +398,10 @@
                     },
                     body: JSON.stringify(todos)
                 });
+                // Nach dem Speichern Benachrichtigungen aktualisieren
+                if (notificationsLoaded) {
+                    loadNotifications();
+                }
             } catch (error) {
                 console.log('Fehler beim Speichern der To-Dos:', error);
             }
@@ -372,9 +491,65 @@
             `;
         }
 
-        // Pulse Animation
+        // Automatisches Aktualisieren der Benachrichtigungen alle 30 Sekunden
+        setInterval(() => {
+            if (notificationsLoaded) {
+                loadNotifications();
+            }
+        }, 30000);
+
+        // Schließe Dropdown bei Escape-Taste
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const dropdown = document.getElementById('notificationsDropdown');
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // CSS für alle Styles
         const style = document.createElement('style');
         style.textContent = `
+            .complete-todo-btn:hover {
+                background: linear-gradient(135deg, #38f9d7, #43e97b) !important;
+                transform: translateY(-1px);
+                box-shadow: 0 3px 10px rgba(67, 233, 123, 0.3);
+            }
+
+            .complete-todo-btn:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+                transform: none !important;
+            }
+
+            .todo-notification {
+                transition: all 0.3s ease;
+            }
+
+            .no-notifications {
+                text-align: center;
+                padding: 40px 20px;
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .no-notifications i {
+                font-size: 32px;
+                color: rgba(67, 233, 123, 0.8);
+                margin-bottom: 10px;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .no-notifications h4 {
+                color: white;
+                margin-bottom: 8px;
+                font-size: 16px;
+                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            }
+
+            .no-notifications p {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
             @keyframes pulse {
                 0% { transform: scale(1); }
                 50% { transform: scale(1.2); }
